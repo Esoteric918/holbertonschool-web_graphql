@@ -8,12 +8,16 @@ const tasks = [
 	{	id: '1',
 		title: 'Create your first webpage',
 		weight: 1,
-		description: 'Create your first HTML file 0-index.html with: -Add the doctype on the first line (without any comment) -After the doctype, open and close a html tag Open your file in your browser (the page should be blank)'
+		description: 'Create your first HTML file 0-index.html with: -Add the doctype on the first line (without any comment) -After the doctype, open and close a html tag Open your file in your browser (the page should be blank)',
+    projects: ['1']
+
 	},
 	{ id: '2',
     title: 'Structure your webpage',
     weight: 1,
-    description: 'Copy the content of 0-index.html into 1-index.html Create the head and body sections inside the html tag, create the head and body tags (empty) in this order'}
+    description: 'Copy the content of 0-index.html into 1-index.html Create the head and body sections inside the html tag, create the head and body tags (empty) in this order',
+    projects: ['1']
+  }
 ];
 
 const projects = [
@@ -36,10 +40,10 @@ const TaskType = new graphql.GraphQLObjectType({
 		description: { type: GraphQLString },
 		title: { type: GraphQLString },
 		weight: { type: GraphQLInt },
-    task: {
+    project: {
       type: TaskType,
       resolve: (parent, args) => {
-        return _.find(tasks, { id: parent.id })
+        return _.find(projects, { id: parent.id })
     }
     }
 	}),
@@ -52,14 +56,15 @@ const ProjectType = new graphql.GraphQLObjectType({
     title: { type: GraphQLString },
     weight: { type: GraphQLInt },
     description: { type: GraphQLString },
-    project: {
-      type: ProjectType,
+    task: {
+      type: new graphql.GraphQLList(TaskType),
       resolve: (parent, args) => {
-        return _.find(projects, { id: parent.id })
+        return _.filter(tasks, { project: parent.id })
       }
     }
   })
 });
+
 
 
 const RootQuery = new graphql.GraphQLObjectType({
@@ -68,7 +73,7 @@ const RootQuery = new graphql.GraphQLObjectType({
     task: {
       type: TaskType,
       args: {
-        id: { type: graphql.GraphQLID }
+        id: { type: GraphQLID }
       },
       resolve: (parent, args) => {
         return _.find(tasks, { id: args.id });
@@ -77,7 +82,7 @@ const RootQuery = new graphql.GraphQLObjectType({
     project: {
       type: ProjectType,
       args: {
-        id: { type: graphql.GraphQLID }
+        id: { type: GraphQLID }
       },
       resolve: (parent, args) => {
         return _.find(projects, { id: args.id });
