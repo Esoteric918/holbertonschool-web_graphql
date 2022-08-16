@@ -21,7 +21,7 @@ const tasks = [
     description:
       "Copy the content of 0-index.html into 1-index.html Create the head and body sections inside the html tag, create the head and body tags (empty) in this order",
     projectId: "1",
-  },
+  }
 ];
 
 const projects = [
@@ -47,7 +47,7 @@ const RootQuery = new graphql.GraphQLObjectType({
     task: {
       type: TaskType,
       args: {
-        id: { type: GraphQLID },
+        id: { type: GraphQLString },
       },
       resolve: (parent, args) => {
         return _.find(tasks, { id: args.id });
@@ -64,11 +64,11 @@ const RootQuery = new graphql.GraphQLObjectType({
     },
     tasks: {
       type: new GraphQLList(TaskType),
-      resolve: () => tasks,
+      resolve: () => tasks
     },
     projects: {
       type: new GraphQLList(ProjectType),
-      resolve: () => projects,
+      resolve: () => projects
     },
   }),
 });
@@ -99,7 +99,7 @@ const ProjectType = new graphql.GraphQLObjectType({
     tasks: {
       type: new GraphQLList(TaskType),
       resolve: (parent, args) => {
-        return _.filter(tasks, { project: parent.id });
+        return _.filter(tasks, { projectId: parent.id });
       },
     },
   }),
