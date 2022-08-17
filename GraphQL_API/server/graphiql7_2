@@ -1,0 +1,12 @@
+mutation {
+    addTask(
+        title: "Reboot styling",
+        weight: 2,
+        description: "Reboot is a free and open-source CSS framework directed at responsive, mobile-first front-end web development.",
+        projectId: "62fd0a8af93c33bb7988b5c7"
+    ) {
+        title
+        weight
+        description
+    }
+}
