@@ -20,7 +20,7 @@ const RootQuery = new graphql.GraphQLObjectType({
         id: { type: GraphQLString },
       },
       resolve: (parent, args) => {
-        return _.find(tasks, { id: args.id });
+        return _.find(Task, { id: args.id });
       },
     },
     project: {
@@ -29,16 +29,16 @@ const RootQuery = new graphql.GraphQLObjectType({
         id: { type: GraphQLID },
       },
       resolve: (parent, args) => {
-        return _.find(projects, { id: args.id });
+        return _.find(Project, { id: args.id });
       },
     },
     tasks: {
       type: new GraphQLList(TaskType),
-      resolve: () => tasks
+      resolve: () => Task.find({}),
     },
     projects: {
       type: new GraphQLList(ProjectType),
-      resolve: () => projects
+      resolve: () => Project.find({}),
     },
   }),
 });
@@ -53,7 +53,7 @@ const TaskType = new graphql.GraphQLObjectType({
     project: {
       type: TaskType,
       resolve: (parent, args) => {
-        return _.find(projects, { id: parent.projectId });
+        return _.find(Project, { id: parent.projectId });
       },
     },
   }),
@@ -69,7 +69,7 @@ const ProjectType = new graphql.GraphQLObjectType({
     tasks: {
       type: new GraphQLList(TaskType),
       resolve: (parent, args) => {
-        return _.filter(tasks, { projectId: parent.id });
+        return _.filter(Task, { projectId: parent.id });
       },
     },
   }),
